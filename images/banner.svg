@@ -1,0 +1,51 @@
+<svg width="900" height="180" viewBox="0 0 900 180" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#161b22"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#39d353"/>
+      <stop offset="100%" stop-color="#58a6ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="180" rx="10" fill="url(#bg)"/>
+  <rect x="1" y="1" width="898" height="178" rx="9" fill="none" stroke="#30363d" stroke-width="1"/>
+
+  <!-- hex grid accent, left -->
+  <g stroke="#21262d" stroke-width="1" fill="none" opacity="0.8">
+    <path d="M30 40 L50 30 L70 40 L70 60 L50 70 L30 60 Z"/>
+    <path d="M70 60 L90 50 L110 60 L110 80 L90 90 L70 80 Z"/>
+    <path d="M30 80 L50 70 L70 80 L70 100 L50 110 L30 100 Z"/>
+    <path d="M70 100 L90 90 L110 100 L110 120 L90 130 L70 120 Z"/>
+  </g>
+
+  <!-- node + lines motif, right -->
+  <g stroke="#30363d" stroke-width="1.5">
+    <line x1="760" y1="50" x2="820" y2="40"/>
+    <line x1="760" y1="50" x2="810" y2="90"/>
+    <line x1="760" y1="50" x2="780" y2="120"/>
+    <line x1="810" y1="90" x2="850" y2="110"/>
+    <line x1="810" y1="90" x2="820" y2="40"/>
+  </g>
+  <circle cx="760" cy="50" r="6" fill="#f85149"/>
+  <circle cx="820" cy="40" r="4" fill="#58a6ff"/>
+  <circle cx="810" cy="90" r="4" fill="#58a6ff"/>
+  <circle cx="780" cy="120" r="4" fill="#58a6ff"/>
+  <circle cx="850" cy="110" r="4" fill="#58a6ff"/>
+
+  <!-- title -->
+  <text x="160" y="80" font-family="'SFMono-Regular', Consolas, 'Courier New', monospace" font-size="34" font-weight="700" fill="#e6edf3">
+    ACTIVE DIRECTORY ATTACKS
+  </text>
+  <text x="160" y="110" font-family="'SFMono-Regular', Consolas, 'Courier New', monospace" font-size="15" fill="#7d8590">
+    LLMNR/NBT-NS poisoning &#183; NTLM hashes &#183; SMB relay &#183; lab-verified notes
+  </text>
+
+  <rect x="160" y="128" width="560" height="3" rx="1.5" fill="url(#accent)"/>
+
+  <text x="160" y="155" font-family="'SFMono-Regular', Consolas, 'Courier New', monospace" font-size="13" fill="#484f58">
+    for authorized testing &amp; educational use only
+  </text>
+</svg>

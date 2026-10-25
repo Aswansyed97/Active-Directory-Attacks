@@ -1,4 +1,13 @@
-# Active Directory Attacks
+<p align="center">
+  <img src="./images/banner.svg" alt="Active Directory Attacks" width="100%">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/scope-Active%20Directory-blue" alt="scope">
+  <img src="https://img.shields.io/badge/status-active%20notes-brightgreen" alt="status">
+  <img src="https://img.shields.io/badge/format-Markdown-informational" alt="format">
+  <img src="https://img.shields.io/badge/use-authorized%20testing%20only-red" alt="authorized use only">
+</p>
 
 Study notes and reference material on common Active Directory attack
 techniques — how they work, how they chain together, and how to defend
@@ -26,21 +35,39 @@ capture.
 
 ---
 
-## How the Topics Fit Together
+## Attack Chain
 
-The notes follow a single attack chain and the theory that explains each step:
+Everything in this repo follows one chain, starting from a single mistyped
+hostname:
 
-1. **Poison** name resolution with
-   [LLMNR / NBT-NS poisoning](./LLMNR-NBT-NS-Poisoning.md) to make a victim
-   authenticate to you — see it done in the
-   [lab walkthrough](./lab-walkthrough.md).
-2. That capture is a **Net-NTLMv2 response**, not a reusable password hash —
-   the [hashes notes](./windows_hashes_notes.md) explain the difference and
-   why it dictates what you can do next.
-3. From there the hash goes one of two ways: **crack it offline**
-   ([lab walkthrough](./lab-walkthrough.md)) or **relay it live** to another
-   host when the password is too strong to crack
-   ([SMB relay attack](./smb-relay-attack.md)).
+```mermaid
+flowchart LR
+    A["DNS lookup fails"] --> B["LLMNR / NBT-NS broadcast"]
+    B --> C["Responder answers as the victim"]
+    C --> D["Victim authenticates to attacker"]
+    D --> E["NTLMv2 hash captured"]
+    E --> F{"Password crackable?"}
+    F -->|yes| G["Crack offline — hashcat"]
+    F -->|no / time-sensitive| H["Relay live — ntlmrelayx"]
+    H --> I["Session on target as the victim"]
+
+    style A fill:#161b22,stroke:#30363d,color:#e6edf3
+    style B fill:#161b22,stroke:#30363d,color:#e6edf3
+    style C fill:#161b22,stroke:#f85149,color:#e6edf3
+    style D fill:#161b22,stroke:#30363d,color:#e6edf3
+    style E fill:#161b22,stroke:#d29922,color:#e6edf3
+    style F fill:#161b22,stroke:#30363d,color:#e6edf3
+    style G fill:#161b22,stroke:#39d353,color:#e6edf3
+    style H fill:#161b22,stroke:#58a6ff,color:#e6edf3
+    style I fill:#161b22,stroke:#58a6ff,color:#e6edf3
+```
+
+| Stage | Covered in |
+|---|---|
+| Poison name resolution | [LLMNR / NBT-NS Poisoning](./LLMNR-NBT-NS-Poisoning.md) |
+| Capture it end-to-end, with screenshots | [Lab Walkthrough](./lab-walkthrough.md) |
+| Understand what was actually captured | [Windows Password Hashes](./windows_hashes_notes.md) |
+| Use the capture without cracking it | [SMB Relay Attack](./smb-relay-attack.md) |
 
 Suggested reading order: LLMNR/NBT-NS Poisoning → Lab Walkthrough → Windows
 Password Hashes → SMB Relay Attack.

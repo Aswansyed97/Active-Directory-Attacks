@@ -58,6 +58,21 @@ authentication, and the first reply wins.
 | 3. Victim connects | The victim's machine trusts the spoofed response and tries to authenticate to the attacker's machine, commonly over SMB. |
 | 4. Credential capture | During authentication the victim sends an **NTLMv2 hash** (challenge/response), which the attacker captures. |
 
+```mermaid
+sequenceDiagram
+    participant V as Victim
+    participant D as DNS Server
+    participant A as Attacker (Responder)
+
+    V->>D: Resolve "\\payrool"
+    D-->>V: No record (name doesn't exist)
+    Note over V: Falls back to LLMNR / NBT-NS
+    V->>A: Multicast/broadcast query: "who is payrool?"
+    A-->>V: "That's me" (spoofed response)
+    V->>A: SMB authentication attempt (NTLMv2)
+    Note over A: Hash captured — no password needed
+```
+
 The captured hash can then be:
 
 - **Cracked offline** with hashcat or John the Ripper to recover the plaintext

@@ -25,6 +25,18 @@ ever recovered, none needed.
 
 ## How the Relay Works
 
+```mermaid
+sequenceDiagram
+    participant V as Victim
+    participant A as Attacker
+    participant T as Target Host (SMB signing off)
+
+    V->>A: NTLM authentication (poisoned by Responder)
+    A->>T: ntlmrelayx replays the same authentication
+    T-->>A: Accepted — session granted as the victim
+    Note over A,T: If T enforced SMB signing, this step fails
+```
+
 | Step | What happens |
 |------|--------------|
 | 1. Poison | Responder answers an LLMNR/NBT-NS query as usual, so the victim is tricked into authenticating to the attacker's machine. |

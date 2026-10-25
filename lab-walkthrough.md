@@ -18,6 +18,19 @@ password.
 | Victim | Windows client |
 | Network | Isolated subnet, both hosts on the same segment |
 
+```mermaid
+graph LR
+    subgraph Isolated Subnet
+        K["Kali Attacker<br/>Responder &#183; Wireshark &#183; hashcat"]
+        W["Windows Victim"]
+    end
+    W -. "LLMNR/NBT-NS broadcast" .-> K
+    K -. "spoofed response" .-> W
+
+    style K fill:#161b22,stroke:#f85149,color:#e6edf3
+    style W fill:#161b22,stroke:#58a6ff,color:#e6edf3
+```
+
 ---
 
 ## 1. Start Responder
