@@ -1,56 +1,47 @@
 # LLMNR / NBT-NS Poisoning
 
-How Windows name-resolution fallback protocols (LLMNR and NBT-NS) can be abused
-on a local network to capture credentials.
+How Windows name-resolution fallback protocols (LLMNR and NBT-NS) can be
+abused on a local network to capture credentials — and why the design makes
+it possible.
 
 ---
 
-## Broadcasting: DNS Lookup Order
+## Background: How Windows Resolves a Name
 
 When a Windows client resolves a name, it works through the following order.
-The last two steps (LLMNR and NBT-NS) are the fallback protocols that make this
-attack possible.
+The last two steps — LLMNR and NBT-NS — are the fallback protocols that make
+this attack possible.
 
-1. **Local DNS Cache**
-   A client searches for a domain on the network, such as `www.hackeru.com`. It
-   first looks for the IP address in its local DNS cache.
+| Order | Step | What happens |
+|-------|------|--------------|
+| 1 | **Local DNS cache** | The client first looks for the name (e.g. `www.hackeru.com`) in its own DNS cache. |
+| 2 | **Root DNS query** | If the cache has no record, the configured DNS server queries the root servers for the `.com` TLD servers. |
+| 3 | **TLD DNS query** | The DNS server then queries the `.com` servers for the authoritative name server of `hackeru.com`, and that server for the host's IP. |
+| 4 | **LLMNR** | If DNS can't resolve the name, the client checks its LLMNR cache, then sends a **multicast** query across the local subnet. |
+| 5 | **NBT-NS** | If LLMNR also fails, the client falls back to NetBIOS Name Service, **broadcasting** a request for the host's NetBIOS name. |
 
-2. **Root DNS Query**
-   If the local cache has no record, the client's configured DNS server queries
-   the root DNS servers for the location of the `.com` TLD servers.
-
-3. **TLD DNS Query**
-   After receiving the location of the `.com` DNS servers, the DNS server queries
-   them for the authoritative name server of `hackeru.com`, then queries that
-   server for the IP address of `www.hackeru.com`.
-
-4. **LLMNR**
-   If DNS cannot resolve the name, the computer checks its LLMNR cache. If no
-   match is found there, it sends a multicast query (LLMNR) across the local
-   subnet.
-
-5. **NBT-NS**
-   If LLMNR cannot resolve the name, the computer falls back to NetBIOS Name
-   Service (NBT-NS), broadcasting a request to find the destination computer's
-   NetBIOS name.
+Steps 4 and 5 are the weak point: both ask *the whole local network* "who is
+this?" and trust whoever answers first.
 
 ---
 
 ## The Protocols
 
 ### NBT-NS
-NetBIOS Name Service (NBT-NS) predates LLMNR and is used to resolve names when
-DNS fails. A computer broadcasts a query across the local network asking which
-host owns a given NetBIOS name. Attackers can exploit this by responding to the
-broadcast and impersonating the requested name, tricking the victim into
-connecting to the attacker's machine instead.
+
+NetBIOS Name Service (NBT-NS) predates LLMNR and resolves names when DNS
+fails. A computer broadcasts a query across the local network asking which
+host owns a given NetBIOS name. An attacker can respond to that broadcast and
+impersonate the requested name, tricking the victim into connecting to the
+attacker's machine instead.
 
 ### LLMNR
-Link-Local Multicast Name Resolution (LLMNR) is the successor to NBT-NS, serving
-the same fallback role — resolving a name locally via multicast when DNS
-resolution fails. Like NBT-NS, its mechanism lets an attacker on the same
-network segment respond to the multicast query and impersonate the target host,
-capturing credentials or redirecting traffic.
+
+Link-Local Multicast Name Resolution (LLMNR) is the successor to NBT-NS,
+serving the same fallback role — resolving a name locally via multicast when
+DNS fails. Like NBT-NS, its mechanism lets an attacker on the same network
+segment answer the multicast query, impersonate the target host, and capture
+credentials or redirect traffic.
 
 ---
 
@@ -70,14 +61,18 @@ authentication, and the first reply wins.
 The captured hash can then be:
 
 - **Cracked offline** with hashcat or John the Ripper to recover the plaintext
-  password, or
-- **Relayed in real time** to another machine (NTLM relay, e.g. via
-  **ntlmrelayx**) to authenticate as the victim elsewhere — which can lead to
-  code execution if relayed to a host where that user has admin rights.
+  password (see the [Lab Walkthrough](./lab-walkthrough.md)), or
+- **Relayed in real time** to another machine (NTLM relay via `ntlmrelayx`) to
+  authenticate as the victim elsewhere — which can lead to code execution if
+  relayed to a host where that user has admin rights (see
+  [SMB Relay Attack](./smb-relay-attack.md)).
 
-**Why it works:** LLMNR and NBT-NS have no authentication for who is allowed to
-answer a name query — a trust-everyone-on-the-LAN design, which is exactly what
-makes them exploitable.
+**Why it works:** LLMNR and NBT-NS have no authentication for who is allowed
+to answer a name query — a trust-everyone-on-the-LAN design, which is exactly
+what makes them exploitable.
+
+> For the difference between the captured Net-NTLMv2 *response* and the NT hash
+> at rest, see [Windows Password Hashes](./windows_hashes_notes.md).
 
 ---
 
@@ -88,9 +83,22 @@ makes them exploitable.
   Turn off multicast name resolution`).
 - Disable NBT-NS on each adapter (or via DHCP option 001 / a startup script).
 - Enforce **SMB signing** to block NTLM relay.
-- Use long, strong passwords so captured NTLMv2 hashes are impractical to crack.
+- Use long, strong passwords so captured NTLMv2 hashes are impractical to
+  crack.
 
 ---
 
-> **For authorized testing only.** These techniques are documented for learning
-> and for use in labs or engagements you have explicit permission to test.
+## Related Notes
+
+- [Lab Walkthrough](./lab-walkthrough.md) — this attack captured end-to-end
+  with screenshots, from poisoning to cracked password.
+- [Windows Password Hashes](./windows_hashes_notes.md) — what the captured
+  hash actually is, and how it differs from the NT hash at rest.
+- [SMB Relay Attack](./smb-relay-attack.md) — using the captured
+  authentication live instead of cracking it.
+
+---
+
+> **For authorized testing only.** These techniques are documented for
+> learning and for use in labs or engagements you have explicit permission to
+> test.
