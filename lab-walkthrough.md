@@ -5,8 +5,7 @@ A hands-on run of the attack described in
 and cracked — from poisoning the broadcast to recovering the plaintext
 password.
 
-> **Lab environment only** — all hosts, accounts, and hashes shown are from
-> VMs I own and have permission to test.
+All hosts, accounts, and hashes shown are from my own isolated lab VMs.
 
 ---
 

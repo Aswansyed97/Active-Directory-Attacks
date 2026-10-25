@@ -6,16 +6,12 @@
   <img src="https://img.shields.io/badge/scope-Active%20Directory-blue" alt="scope">
   <img src="https://img.shields.io/badge/status-active%20notes-brightgreen" alt="status">
   <img src="https://img.shields.io/badge/format-Markdown-informational" alt="format">
-  <img src="https://img.shields.io/badge/use-authorized%20testing%20only-red" alt="authorized use only">
 </p>
 
 Study notes and reference material on common Active Directory attack
 techniques — how they work, how they chain together, and how to defend
 against them. Each topic pairs the underlying theory with a hands-on lab
 capture.
-
-> **For authorized testing and educational use only** — labs and engagements
-> you have explicit permission to test.
 
 ---
 

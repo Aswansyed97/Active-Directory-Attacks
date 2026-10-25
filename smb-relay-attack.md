@@ -127,9 +127,3 @@ enforced** — those are the only viable relay targets (see below).
   happens in the first place.
 - Restrict local admin rights and enforce unique local admin passwords
   (LAPS) to limit how far a successful relay can reach.
-
----
-
-> **For authorized testing only.** These techniques are documented for
-> learning and for use in labs or engagements you have explicit permission
-> to test.

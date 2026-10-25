@@ -111,9 +111,3 @@ what makes them exploitable.
   hash actually is, and how it differs from the NT hash at rest.
 - [SMB Relay Attack](./smb-relay-attack.md) — using the captured
   authentication live instead of cracking it.
-
----
-
-> **For authorized testing only.** These techniques are documented for
-> learning and for use in labs or engagements you have explicit permission to
-> test.

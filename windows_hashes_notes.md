@@ -150,8 +150,3 @@ Interface (SSPI)**, Windows' pluggable auth-negotiation framework. Seeing
   NTLMv2-SSP hash end-to-end.
 - [SMB Relay Attack](./smb-relay-attack.md) — using a captured authentication
   without cracking it.
-
----
-
-> **For authorized testing only.** These notes are for learning and for use in
-> labs or engagements you have explicit permission to test.
