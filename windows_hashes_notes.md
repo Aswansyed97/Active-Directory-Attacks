@@ -41,6 +41,19 @@ This distinction matters for attack paths:
 - A stolen **NT hash** can be used directly in a **Pass-the-Hash** attack — no cracking required.
 - A captured **Net-NTLMv1/v2 response** (e.g. from an LLMNR/NBT-NS poisoning attack via Responder) cannot be replayed as-is. It must either be **cracked offline** (hashcat, as in the LLMNR lab) or **relayed** in real time (NTLM relay attacks) to be useful.
 
+## Hash Evolution — Net-NTLM Authentication Protocols
+
+These are the challenge-response protocols that *use* the NT hash to authenticate over the network. They are what Responder captures — not the NT hash at rest.
+
+**Net-NTLMv1**
+The server sends an **8-byte challenge**; the client encrypts it with DES, keyed by the user's NT hash (historically the LM hash too, now largely disabled), and returns the result as the response. Weak — the DES-based scheme is crackable quickly on modern hardware/rainbow tables, with no protection against relay.
+
+**Net-NTLMv2**
+The improved successor. Uses **HMAC-MD5** and adds a **client-side challenge** (timestamp + target info) on top of the server's challenge. Stronger hashing, larger effective keyspace, and per-session unique data make it far more resistant to cracking and replay than v1 — though still crackable offline against a weak password, and still relayable.
+
+**NTLMv2-SSP**
+"SSP" means the exchange went through the **Security Support Provider Interface (SSPI)**, Windows' pluggable auth-negotiation framework. Seeing `NTLMv2-SSP` (as Responder logs it) typically indicates authentication over **SMB**, or against a service **outside a domain trust** — consistent with a `MicrosoftAccount\<user>` (non-domain) capture.
+
 ## Mitigations
 
 - Disable LM hash storage (default since Vista/Server 2008, but verify via Group Policy: *Network security: Do not store LAN Manager hash value on next password change*).
