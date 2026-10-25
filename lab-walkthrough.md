@@ -54,13 +54,36 @@ victim tries to authenticate — no password needed, just the attempt.
 
 Hashes land in `/usr/share/responder/logs/` as `SMB-NTLMv2-SSP-<client>.txt`.
 
+```
+cd /usr/share/responder/logs
+ls -la
+```
+
 ![Hash log file](./images/07-hash-log-file.png)
 
-## 8. Crack it
+## 8. Save the hash to a file
 
-`hashcat -m 5600 ntlmv2.txt /usr/share/wordlists/rockyou.txt` cracks the NTLMv2 hash
-against rockyou — this one fell in under 2 seconds to the weak password `1234567`,
-after only ~8,000 of 14M candidates.
+Create a file and paste in the **full** captured hash line — the whole
+`username::domain:challenge:response:...` string, on a single unbroken line (a
+fragment or a line broken mid-string makes hashcat reject it).
+
+```
+nano ntlmv2.txt
+```
+
+Paste the line, then save and exit (`Ctrl+O`, Enter, `Ctrl+X`).
+
+## 9. Crack it
+
+Unzip the wordlist (first time only) and run hashcat in NTLMv2 mode:
+
+```
+gunzip /usr/share/wordlists/rockyou.txt.gz
+hashcat -m 5600 ntlmv2.txt /usr/share/wordlists/rockyou.txt
+```
+
+`-m 5600` is the NetNTLMv2 mode. This hash fell in under 2 seconds to the weak
+password `1234567`, after only ~8,000 of 14M candidates.
 
 ![hashcat cracked the hash](./images/08-hashcat-cracked.png)
 
