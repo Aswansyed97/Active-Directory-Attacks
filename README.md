@@ -28,6 +28,9 @@ capture.
 - **[SMB Relay Attack](./smb-relay-attack.md)** — relaying captured
   authentication to another host instead of cracking it, with Responder +
   ntlmrelayx.
+- **[AD Enumeration with NetExec](./ad-enumeration.md)** — taking one valid
+  domain credential through users, shares, groups and policy to a full NTDS
+  dump and domain compromise.
 
 ---
 
@@ -64,9 +67,14 @@ flowchart LR
 | Capture it end-to-end, with screenshots | [Lab Walkthrough](./lab-walkthrough.md) |
 | Understand what was actually captured | [Windows Password Hashes](./windows_hashes_notes.md) |
 | Use the capture without cracking it | [SMB Relay Attack](./smb-relay-attack.md) |
+| Take a credential to full domain compromise | [AD Enumeration with NetExec](./ad-enumeration.md) |
+
+Once that chain yields a working credential or session, the next phase is
+enumerating the domain and escalating from it — picked up in
+[AD Enumeration with NetExec](./ad-enumeration.md).
 
 Suggested reading order: LLMNR/NBT-NS Poisoning → Lab Walkthrough → Windows
-Password Hashes → SMB Relay Attack.
+Password Hashes → SMB Relay Attack → AD Enumeration with NetExec.
 
 ---
 
