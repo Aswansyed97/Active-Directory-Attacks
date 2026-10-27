@@ -31,6 +31,11 @@ capture.
 - **[AD Enumeration with NetExec](./ad-enumeration.md)** — taking one valid
   domain credential through users, shares, groups and policy to a full NTDS
   dump and domain compromise.
+- **[Password Spraying](./password-spraying.md)** — trying one password against
+  many accounts to stay under lockout thresholds, with Kerbrute and NetExec.
+- **[Password Spraying Lab Walkthrough](./password-spraying-lab-walkthrough.md)**
+  — enumerating domain users and spraying a known password to a domain hit,
+  with screenshots.
 
 ---
 
@@ -68,13 +73,16 @@ flowchart LR
 | Understand what was actually captured | [Windows Password Hashes](./windows_hashes_notes.md) |
 | Use the capture without cracking it | [SMB Relay Attack](./smb-relay-attack.md) |
 | Take a credential to full domain compromise | [AD Enumeration with NetExec](./ad-enumeration.md) |
+| Reuse a known password across the domain | [Password Spraying](./password-spraying.md) |
 
 Once that chain yields a working credential or session, the next phase is
 enumerating the domain and escalating from it — picked up in
-[AD Enumeration with NetExec](./ad-enumeration.md).
+[AD Enumeration with NetExec](./ad-enumeration.md) — and hunting for password
+reuse across other accounts with [Password Spraying](./password-spraying.md).
 
 Suggested reading order: LLMNR/NBT-NS Poisoning → Lab Walkthrough → Windows
-Password Hashes → SMB Relay Attack → AD Enumeration with NetExec.
+Password Hashes → SMB Relay Attack → AD Enumeration with NetExec → Password
+Spraying.
 
 ---
 
