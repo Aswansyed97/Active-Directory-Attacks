@@ -4,9 +4,6 @@ A hands-on run of the attack described in [password-spraying.md](./password-spra
 captured in a home lab (Kali attacker against a Windows Server 2022 DC on an
 isolated subnet).
 
-> Lab environment only — all hosts, accounts, and credentials shown are from
-> VMs I own and have permission to test.
-
 ## 1. Enumerate the domain's users
 
 Working directory first:
